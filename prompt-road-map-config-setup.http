@@ -1,0 +1,56 @@
+
+POST http://localhost:8080/prompt_road_map_config
+Content-Type: application/json
+
+{
+  "name": "doc_analysis_relevant_sections"
+}
+
+###
+
+POST http://localhost:8080/prompt_road_map_config
+Content-Type: application/json
+
+{
+  "name": "doc_analysis_relevant_passages"
+}
+
+###
+
+POST http://localhost:8080/prompt_road_map_config/doc_analysis_relevant_sections/prompt_road_map
+Content-Type: application/json
+
+{
+  "response_validation_name": "doc_analysis_relevant_sections_input",
+  "metadata_validation_name": "doc_analysis_relevant_sections_output",
+  "question_template": "Analyze the following table of contents (TOC) and determine the sections that are most relevant to answering the user's question. Each section includes a title, start page, and end page. Provide a list of sections (with their respective page ranges) that are likely to contain the answer to the user's question. Only return the response in JSON format.\n\nUser question: \"<question>\"\n\nTable of contents (TOC): \"<sections>\"\n\nYour response must be in the following JSON format:\n{\n   \"relevant_sections\": [\n       {\n           \"title\": \"section title\",\n           \"start_page\": page_number,\n           \"end_page\": page_number\n       },\n       ...\n   ]\n}\n\nIf no sections seem relevant, return an empty relevant_sections list.",
+  "step": 1
+}
+
+###
+
+POST http://localhost:8080/prompt_road_map_config/doc_analysis_relevant_passages/prompt_road_map
+Content-Type: application/json
+
+{
+  "response_validation_name": "doc_analysis_relevant_passages_input",
+  "metadata_validation_name": "doc_analysis_relevant_passages_output",
+  "question_template": "Given the text from a document section and the user's question, find passages that are relevant to answering the question. The document section includes the title, page number, and the extracted text. If there are any relevant passages, return them in JSON format. If none are found, return an empty list.\n\nUser question: \"<question>\"\n\nDocument section:\nTitle: \"<title>\"\n Text: \"<text>\"\n\nYour response must be in the following JSON format:\n{\n   \"relevant_passages\": [\"relevant text\", \"another relevant text\"]\n}\n\nIf no relevant passages are found, return an empty list.",
+  "step": 1
+}
+
+###
+GET http://localhost:8080/prompt_road_map_config/doc_analysis_relevant_sections/step/1
+
+###
+
+POST http://localhost:8080/prompt_road_map_config/execute/doc_analysis_relevant_sections
+Content-Type: application/json
+
+{
+    "output_queue":"output_queue",
+    "model":"gemini",
+    "metadata":{}
+}
+
+

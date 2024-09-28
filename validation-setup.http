@@ -1,0 +1,319 @@
+# Análise de PDFs - Validação de Payloads - arquivo .http
+
+# doc_analysis_relevant_sections_input
+# ```json
+# {
+#     "question":"user question",
+#     "sections": [
+#         {
+#             "title": "Introduction",
+#             "start_page": 1,
+#             "end_page": 2,
+#             "context": "This section introduces the main topics..."
+#         },
+#         {
+#             "title": "Methodology",
+#             "start_page": 2,
+#             "end_page": 2,
+#             "context": "In this section, we describe the methods..."
+#         },
+#         {
+#             "title": "Results",
+#             "start_page": 3,
+#             "end_page": 5,
+#             "context": "The results show a significant improvement..."
+#         }
+#     ]
+# }
+# ```
+
+###
+
+POST http://localhost:8081/payload_validations
+Content-Type: application/json
+
+{
+  "name": "doc_analysis_section"
+}
+
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_section/key_value_formats/title
+Content-Type: application/json
+
+{
+  "type": "string",
+  "required": true,
+  "match": "min:1"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_section/key_value_formats/start_page
+Content-Type: application/json
+
+{
+  "type": "number",
+  "required": true,
+  "match": "min:1"
+}
+
+
+###
+
+
+POST http://localhost:8081/payload_validations/doc_analysis_section/key_value_formats/end_page
+Content-Type: application/json
+
+{
+  "type": "number",
+  "required": true,
+  "match": "min:1"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_section/key_value_formats/context
+Content-Type: application/json
+
+{
+  "type": "string",
+  "required": false,
+  "match": "min:1"
+}
+
+###
+
+POST http://localhost:8081/payload_validations
+Content-Type: application/json
+
+{
+  "name": "doc_analysis_relevant_sections_input"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_sections_input/key_value_formats/sections
+Content-Type: application/json
+
+{
+  "type": "array[object]",
+  "required": true,
+  "match": "min:1",
+  "children_payload_validator_name": "doc_analysis_section"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_sections_input/key_value_formats/question
+Content-Type: application/json
+
+{
+  "type": "string",
+  "required": true,
+  "match": "min:10"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_sections_input
+Content-Type: application/json
+
+{
+    "question":"this is a question",
+    "sections": [
+        {
+            "title": "Introduction",
+            "start_page": 1,
+            "end_page": 2,
+            "context": "This section introduces the main topics..."
+        },
+        {
+            "title": "Methodology",
+            "start_page": 2,
+            "end_page": 2,
+            "context": "In this section, we describe the methods..."
+        },
+        {
+            "title": "Results",
+            "start_page": 3,
+            "end_page": 5,
+            "context": "The results show a significant improvement..."
+        }
+    ]
+}
+
+
+# doc_analysis_relevant_sections_output
+# ```json
+# {
+#     "relevant_sections": [
+#         {
+#             "title": "Methodology",
+#             "start_page": 2,
+#             "end_page": 3
+#         },
+#         {
+#             "title": "Results",
+#             "start_page": 5,
+#             "end_page": 6
+#         }
+#     ]
+# }
+# ```
+# 
+
+###
+
+POST http://localhost:8081/payload_validations
+Content-Type: application/json
+
+{
+  "name": "doc_analysis_relevant_sections_output"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_sections_output/key_value_formats/relevant_sections
+Content-Type: application/json
+
+{
+  "type": "array[object]",
+  "required": true,
+  "match": "min:1",
+  "children_payload_validator_name": "doc_analysis_section"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_sections_output
+Content-Type: application/json
+
+{
+    "relevant_sections": [
+        {
+            "title": "Methodology",
+            "start_page": 2,
+            "end_page": 3
+        },
+        {
+            "title": "Results",
+            "start_page": 5,
+            "end_page": 6
+        }
+    ]
+}
+
+
+# relevant_passages_input
+# ```json
+# {
+#   "title": "Methodology",
+#   "page_number": 2,
+#   "text": "In this section, we describe the experimental setup..."
+#   "question": "What are the main findings?"
+# }
+# ```
+
+###
+
+POST http://localhost:8081/payload_validations
+Content-Type: application/json
+
+{
+  "name": "doc_analysis_relevant_passages_input"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_passages_input/key_value_formats/title
+Content-Type: application/json
+
+{
+  "type": "string",
+  "required": true,
+  "match": "min:1"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_passages_input/key_value_formats/text
+Content-Type: application/json
+
+{
+  "type": "string",
+  "required": true,
+  "match": "min:1"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_passages_input/key_value_formats/question
+Content-Type: application/json
+
+{
+  "type": "string",
+  "required": true,
+  "match": "min:1"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_passages_input/key_value_formats/page_number
+Content-Type: application/json
+
+{
+  "type": "number",
+  "required": true,
+  "match": "min:1"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_passages_input
+Content-Type: application/json
+
+{
+"title": "Methodology",
+"page_number": 2,
+"text": "In this section, we describe the experimental setup...",
+"question": "What are the main findings?"
+}
+
+# relevant_passages_output
+# ```json
+# {
+#     "relevant_passages": ["The study found a significant 20% improvement in efficiency when using the proposed method…"]
+# }
+# ```
+
+###
+
+POST http://localhost:8081/payload_validations
+Content-Type: application/json
+
+{
+  "name": "doc_analysis_relevant_passages_output"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_passages_output/key_value_formats/relevant_passages
+Content-Type: application/json
+
+{
+  "type": "array[string]",
+  "required": true,
+  "match": "min:1"
+}
+
+###
+
+POST http://localhost:8081/payload_validations/doc_analysis_relevant_passages_output
+Content-Type: application/json
+
+{
+    "relevant_passages": ["The study found a significant 20% improvement in efficiency when using the proposed method…"]
+}
+
