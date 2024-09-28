@@ -40,10 +40,6 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8080/prompt_road_map_config/doc_analysis_relevant_sections/step/1
-
-###
-
 POST http://localhost:8080/prompt_road_map_config/execute/doc_analysis_relevant_sections
 Content-Type: application/json
 
